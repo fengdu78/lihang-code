@@ -27,9 +27,16 @@
 -----------
 参考：
 https://github.com/wzyonggege/statistical-learning-method
+
 https://github.com/WenDesi/lihang_book_algorithm
+
 https://blog.csdn.net/tudaodiaozhale
 
-代码整理和修改：机器学习初学者   （微信公众号，ID:ai-start-com）
+代码整理和修改：机器学习初学者  
 
-![gongzhong](gongzhong.jpg)
+微信公众号：机器学习初学者 ![gongzhong](gongzhong.jpg)
+
+
+知识星球：黄博的机器学习圈子![xingqiu](zhishixingqiu1.jpg)
+
+[知乎](https://www.zhihu.com/people/fengdu78)
