@@ -24,6 +24,16 @@
 
 第12章 监督学习方法总结
 
+第13章 无监督学习概论
+
+第14章聚类方法
+
+第15章奇异值分解
+
+第16章主成分分析
+
+第17章潜在语义分析
+
 -----------
 参考：
 https://github.com/wzyonggege/statistical-learning-method
