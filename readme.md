@@ -34,8 +34,19 @@
 
 第17章 潜在语义分析
 
+第18章 概率潜在语义分析
+
+第19章 马尔可夫链蒙特卡洛法
+
+第20章 潜在狄利克雷分配
+
+第21章 PageRank算法
+
+第22章 无监督学习方法总结
+
 -----------
 参考：
+
 https://github.com/wzyonggege/statistical-learning-method
 
 https://github.com/WenDesi/lihang_book_algorithm
