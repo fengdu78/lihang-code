@@ -32,9 +32,9 @@ https://github.com/WenDesi/lihang_book_algorithm
 
 https://blog.csdn.net/tudaodiaozhale
 
-代码整理和修改：机器学习初学者  
+https://github.com/hktxt/Learn-Statistical-Learning-Method
 
-微信公众号：机器学习初学者 ![gongzhong](images/gongzhong.jpg)
+代码整理和修改：机器学习初学者（公众号） ![gongzhong](images/gongzhong.jpg)
 
 
 知识星球：黄博的机器学习圈子![xingqiu](images/zhishixingqiu1.jpg)
