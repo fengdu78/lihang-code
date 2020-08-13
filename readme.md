@@ -10,8 +10,6 @@
 
 2020年6月7日
 
-代码更新地址：https://github.com/fengdu78/lihang-code 
-
 ## 代码目录 
 
 第1章 统计学习方法概论
