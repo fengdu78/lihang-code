@@ -1,4 +1,5 @@
 import numpy as np
+from collections import namedtuple
 
 class kdnode:
 	def __init__(self, data, l, left, right):
@@ -32,13 +33,63 @@ class kdtree:
 		if node.right:
 			self.preorder(node.right)
 
+	def find_nearest(node, x, w=2):
+		
+		result = namedtuple('result', ['np', 'nd', 'visited'])
+
+		def travel(node, x, maxd):
+			if not node:
+				return result([0]*k, float('inf'), 0)
+
+			visited = 1
+
+			cp = node.median
+			cl = node.l
+
+			if x[cl] <= cp[cl]:
+				first = node.left
+				second = node.right
+			else:
+				first = node.right
+				second = node.left
+
+			temp = travel(first, x, maxd)
+			
+			visited += temp.visited
+
+			nearestp = temp.np
+			dist = temp.nd
+
+			if dist < maxd:
+				maxd = dist
+
+			if abs(x[cl] - cp[cl]) <= maxd:
+				temp = travel(second, x, maxd) 
+				visited += temp.visited
+
+			childp = temp.np
+			childd = temp.nd
+
+			if childd < maxd:
+				maxd = childd
+				nearestp = childp
+
+			dist = sqrt(sum((cp[i]-x[i])**w for i in range(k)))
+
+			if dist < maxd:
+				maxd = dist
+				nearestp = cp
+
+			return result(nearestp, maxd, visited)
+
+		return travel(node, x, float('inf'))
 
 if __name__=='__main__':
 	dataset = np.array([[1,2], [2,3],[4,5]])
 	data2 = np.array([[2,3],[5,4],[9,6],[4,7],[8,1],[7,2]])
 	kd = kdtree(data2)
 	kd.preorder(kd.root)
-	print(sorted(data2, key=lambda x:x[0]))
-	print(data2.shape[0]//2)
-	print(data2[data2.shape[0]//2,:])
-	print(data2.sort(axis=1))
+	
+	print(type(kd.root))
+
+	kd.find_nearest(kd.root,np.array([2,4]))
