@@ -16,7 +16,7 @@ class kdtree:
 	def create(self, data, l):
 		if data.shape[0]==0:
 			return None
-		data = np.array(sorted(data, key=lambda x : x[l]))
+		data = np.array(sorted(data, key=lambda x : x[l])) # 将第l维作为排序的key
 		median_idx = data.shape[0] // 2
 		median = data[median_idx, :]
 		
@@ -33,63 +33,81 @@ class kdtree:
 		if node.right:
 			self.preorder(node.right)
 
-	def find_nearest(node, x, w=2):
-		
-		result = namedtuple('result', ['np', 'nd', 'visited'])
+	def inorder(self, node):
+		if node.left:
+			self.inorder(node.left)
+		print(node.median)
+		if node.right:
+			self.inorder(node.right)
 
-		def travel(node, x, maxd):
-			if not node:
-				return result([0]*k, float('inf'), 0)
+	def find_nearest(self, node, x, w=2):
+		# 目标是少计算点之间的距离
 
-			visited = 1
+		result = namedtuple('result', ['nearest_point', 'distance'])
 
-			cp = node.median
-			cl = node.l
+		'''
+		利用kd树求点x的最近邻 (node, x, current_dist)
+		过程: 对任意一个当前遍历到的顶点, 
+		(1) 向下遍历至最小的叶节点, 作为最近邻;
+		(2) 计算点x到当前划分超平面的距离, 若大于current_dist则不需判断兄弟顶点, 否则递归至兄弟顶点;
+		(3) 计算到当前顶点的距离, 若小于当前最小(current_dist或兄弟的最小dist), 则更新最近邻
+		返回值result(最近邻, 最小距离)
+		'''
+		def travel(node, x, current_minn=float('inf'), current_p=[0]*self.k, w=2):
+			if node is None:
+				return result([0]*self.k, float('inf'))
 
-			if x[cl] <= cp[cl]:
-				first = node.left
-				second = node.right
+			point = node.median
+			idx = node.l
+
+			if x[idx] <= point[idx]:
+				temp = travel(node.left, x, current_minn)
+				sibling = node.right
 			else:
-				first = node.right
-				second = node.left
+				temp = travel(node.right, x, current_minn)
+				sibling = node.left
 
-			temp = travel(first, x, maxd)
-			
-			visited += temp.visited
+			if temp.distance < current_minn:
+				current_minn = temp.distance
+				current_p = temp.nearest_point
 
-			nearestp = temp.np
-			dist = temp.nd
+			x2plane = abs(x[idx] - point[idx])
 
-			if dist < maxd:
-				maxd = dist
+			if x2plane <= current_minn:
+				temp = travel(sibling, x, current_minn, current_p)
 
-			if abs(x[cl] - cp[cl]) <= maxd:
-				temp = travel(second, x, maxd) 
-				visited += temp.visited
+			if temp.distance < current_minn:
+				current_minn = temp.distance
+				current_p = temp.nearest_point
 
-			childp = temp.np
-			childd = temp.nd
+			p2p = np.sqrt(sum([(point[i] - x[i])**2 for i in range(self.k)]))
 
-			if childd < maxd:
-				maxd = childd
-				nearestp = childp
+			if p2p < current_minn:
+				current_minn = p2p
+				current_p = point
 
-			dist = sqrt(sum((cp[i]-x[i])**w for i in range(k)))
+			return result(current_p, current_minn)
 
-			if dist < maxd:
-				maxd = dist
-				nearestp = cp
+		return travel(node, x, float('inf'), w)
 
-			return result(nearestp, maxd, visited)
-
-		return travel(node, x, float('inf'))
 
 if __name__=='__main__':
 	dataset = np.array([[1,2], [2,3],[4,5]])
 	data2 = np.array([[2,3],[5,4],[9,6],[4,7],[8,1],[7,2]])
 	kd = kdtree(data2)
+
+	print('/-------preorder--------/')
 	kd.preorder(kd.root)
+
+	print('/-------inorder--------/')
+	kd.inorder(kd.root)
 	
 	print(type(kd.root))
 
-	kd.find_nearest(kd.root,np.array([2,4]))
+	re = kd.find_nearest(kd.root,np.array([2.1,3.1]))
+
+	print('Nearest point: ', re.nearest_point, ", Distance=", re.distance)
+
+	re = kd.find_nearest(kd.root, np.array([2,4.5]))
+
+	print('Nearest point: ', re.nearest_point, ", Distance=", re.distance)
